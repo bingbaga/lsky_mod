@@ -8,7 +8,7 @@
 
 namespace app\index\controller;
 
-use app\common\Cache\CompressJob;
+use app\common\Cache\CompressPush;
 use app\common\model\Folders;
 use app\common\model\Images;
 use app\common\model\Users;
@@ -169,7 +169,7 @@ class Upload extends Base
             $data['quota'] = sprintf('%.2f', (float)$user->quota);
             $data['use_quota'] = sprintf('%.2f', (float)$user->use_quota);
         }
-        (new CompressJob())->addCompressJob($imageData);
+        (new CompressPush())->addCompressJob($imageData);
         return $data;
     }
 

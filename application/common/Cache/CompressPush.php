@@ -2,7 +2,7 @@
 
 namespace app\common\Cache;
 
-class CompressJob extends BaseCache {
+class CompressPush extends BaseCache {
     public function __construct() {
         parent::__construct();
     }
