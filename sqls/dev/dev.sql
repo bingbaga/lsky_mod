@@ -1,0 +1,1 @@
+ALTER TABLE `dev`.`lsky_images` ADD COLUMN `compress_level` tinyint(4) UNSIGNED NOT NULL DEFAULT 0 COMMENT '压缩等级' AFTER `create_time`;
