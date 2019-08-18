@@ -3,17 +3,24 @@
 namespace app\command;
 
 //use think\Cache;
+use app\common\model\QueueLog;
 use app\Job\CompressJob;
 use app\Job\JobBase;
+use app\Job\WaterMarkJob;
 use think\console\Command;
 use think\console\Input;
 use think\console\Output;
+use Exception;
 
 class Queue extends Command {
     private function getQueueJob(): array {
         return [
             [
                 'class' => CompressJob::class,
+                'data'  => []
+            ],
+            [
+                'class' => WaterMarkJob::class,
                 'data'  => []
             ]
         ];
@@ -31,11 +38,16 @@ class Queue extends Command {
         //$output->writeln('compress');
         while (true) {
             foreach ($this->getQueueJob() as $job) {
-                $class = new $job['class']($job['data']);
-                /**
-                 * @var JobBase $class
-                 */
-                $class->handle();
+                try {
+                    $class = new $job['class']($job['data']);
+                    /**
+                     * @var JobBase $class
+                     */
+                    $class->handle();
+                } catch (Exception $exception) {
+                    echo 'queue error: ' . $exception->getMessage() . PHP_EOL;
+                }
+
             }
         }
     }
