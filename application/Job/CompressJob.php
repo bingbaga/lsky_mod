@@ -1,32 +1,22 @@
 <?php
 
-namespace app\command;
+namespace app\Job;
 
-//use think\Cache;
+use Exception;
+use app\common\model\QueueLog;
 use app\common\Service\CompressService;
 use think\facade\App;
 use think\facade\Cache;
-use think\console\Command;
-use think\console\Input;
-use think\console\Output;
 
-class Compress extends Command {
-    protected function configure() {
-        // 指令配置
-        $this->setName('compress');
-        // 设置参数
+class CompressJob extends JobBase {
+    public function handle(): void {
 
-    }
-
-    protected function execute(Input $input, Output $output) {
-        // 指令输出
-        //$output->writeln('compress');
         $root = App::getRootPath() . '/public/';
         $redis = Cache::store('redis')->handler();
         $redis->select(9);
-        while (true) {
-            $data = $redis->lpop('imgCompress');
-            if ($data) {
+        $data = $redis->lpop('imgCompress');
+        if ($data) {
+            try {
                 /**
                  * @var string $data
                  */
@@ -35,9 +25,12 @@ class Compress extends Command {
                 $percent = 1;  #原图压缩，不缩放，但体积大大降低
                 //echo $root . $source;
                 (new CompressService($source, $percent))->compressImg($source);
-                echo '处理-' . $picInfo['pathname'] . '完成' . PHP_EOL;
+                echo '压缩图片-' . $picInfo['pathname'] . '完成' . PHP_EOL;
+            } catch (Exception $exception) {
+                (new QueueLog())->insert(['queue_name' => self::class, 'data' => $data, 'error_msg' => $exception->getMessage()]);
+                echo '压缩图片脚本出现异常，异常消息为：' . $exception->getMessage() . PHP_EOL;
             }
+
         }
     }
-
 }

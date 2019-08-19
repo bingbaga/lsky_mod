@@ -9,8 +9,8 @@
 // | Author: yunwuxin <448901948@qq.com>
 // +----------------------------------------------------------------------
 
-use app\command\Compress;
+use app\command\Queue;
 
 return [
-    'compress' => Compress::class
+    'queue' => Queue::class
 ];
