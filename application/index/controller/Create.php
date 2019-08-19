@@ -8,6 +8,10 @@ use think\Controller;
 use think\facade\App;
 use think\Request;
 
+/**
+ * Class Create 图片裁剪
+ * @package app\index\controller
+ */
 class Create extends Controller {
     public function index(Request $request): void {
         $root = App::getRootPath() . '/public/';
