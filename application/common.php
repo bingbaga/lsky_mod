@@ -118,7 +118,7 @@ function str_rand($length = 16, $char = '0123456789abcdefghijklmnopqrstuvwxyzABC
  */
 function make_token()
 {
-    return md5('LSKY PRO' . uniqid() . time());
+    return md5('LSKY PRO' . uniqid('', true) . time());
 }
 
 /**
