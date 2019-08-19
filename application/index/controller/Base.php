@@ -12,7 +12,10 @@ use app\common\model\Group;
 use app\common\model\Users;
 use PHPMailer\PHPMailer\PHPMailer;
 use think\Controller;
+use think\db\exception\DataNotFoundException;
+use think\db\exception\ModelNotFoundException;
 use think\Exception;
+use think\exception\DbException;
 use think\facade\Config;
 use think\facade\Session;
 use think\facade\Env;
@@ -79,12 +82,11 @@ class Base extends Controller
      *
      * @param null $user
      *
-     * @throws \think\db\exception\DataNotFoundException
-     * @throws \think\db\exception\ModelNotFoundException
-     * @throws \think\exception\DbException
+     * @throws DataNotFoundException
+     * @throws ModelNotFoundException
+     * @throws DbException
      */
-    protected function init($user = null)
-    {
+    protected function init($user = null): void {
         $this->user = $user;
 
         // 角色组
@@ -107,8 +109,7 @@ class Base extends Controller
      * @param $strategy
      * @return array
      */
-    protected function getStrategyConfig($strategy)
-    {
+    protected function getStrategyConfig($strategy): array {
         $strategyConfig = [];
         foreach ($this->configs as $value) {
             if ($value->key === $strategy) {
@@ -127,7 +128,7 @@ class Base extends Controller
      */
     protected function getStrategyInstance($strategy = null)
     {
-        $currentStrategy = $strategy ? $strategy : strtolower($this->group->strategy);
+        $currentStrategy = $strategy ?: strtolower($this->group->strategy);
         // 驱动
         $driver = Config::get('strategy.' . $currentStrategy . '.class');
         // 获取该储存策略配置
@@ -136,8 +137,7 @@ class Base extends Controller
         return new $driver($strategyConfig);
     }
 
-    protected function sendMail($email, $subject, $body)
-    {
+    protected function sendMail($email, $subject, $body): bool {
         $mail = new PHPMailer();
         try {
             // $mail->SMTPDebug = 2;
@@ -159,7 +159,7 @@ class Base extends Controller
                 throw new Exception('Mailer Error: ' . $mail->ErrorInfo);
             }
         } catch (Exception $e) {
-            return $this->error($e->getMessage());
+            $this->error($e->getMessage());
         }
 
         return true;

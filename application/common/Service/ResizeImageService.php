@@ -4,14 +4,15 @@ namespace app\common\Service;
 
 use Imagine\Gd\Imagine;
 use Imagine\Image\Box;
-use RuntimeException;
+use think\exception\HttpResponseException;
+use think\Response;
 
 class ResizeImageService {
     public function resize(string $filePath, bool $save = true): void {
         $picInfo = $this->getSourceImage($filePath);
         $realFile = $picInfo['real'];
         if (!file_exists($realFile)) {
-            throw new RuntimeException('错误,源图片不存在，错误图片：' . $realFile);
+            throw new HttpResponseException(new Response('错误的请求', 404));
         }
         $imagine = new Imagine();
         $pic = $imagine->open($realFile);
@@ -32,7 +33,7 @@ class ResizeImageService {
         $nameArr = explode('_', $fileName);// /path/to/name 3 4.jpg
         $nameNum = count($nameArr);
         if($nameNum === 1){
-            throw new RuntimeException('错误的裁剪格式，使用#分隔');
+            throw new HttpResponseException(new Response('404 Not Found', 404));
         }
         $with = $nameArr[1];
         $extArr = explode('.', $nameArr[$nameNum - 1]);
