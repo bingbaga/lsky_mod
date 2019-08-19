@@ -18,10 +18,8 @@ use think\Exception;
 use think\exception\ErrorException;
 use think\facade\Config;
 
-class Upload extends Base
-{
-    public function upload()
-    {
+class Upload extends Base {
+    public function upload() {
         if ($this->request->isPost()) {
             Db::startTrans();
             try {
@@ -49,8 +47,7 @@ class Upload extends Base
      * @return array
      * @throws Exception
      */
-    public function execute($user = null)
-    {
+    public function execute($user = null) {
         if (!$this->config['allowed_tourist_upload'] && !$user) {
             throw new Exception('管理员关闭了游客上传！');
         }
@@ -123,15 +120,15 @@ class Upload extends Base
         }
 
         $imageData = [
-            'user_id' => $user ? $user->id : 0,
-            'strategy' => $currentStrategy,
-            'path' => dirname($pathname),
-            'name' => basename($pathname),
-            'pathname' => $pathname,
-            'size' => $size,
-            'mime' => $mime,
-            'sha1' => $sha1,
-            'md5' => $md5,
+            'user_id'    => $user ? $user->id : 0,
+            'strategy'   => $currentStrategy,
+            'path'       => dirname($pathname),
+            'name'       => basename($pathname),
+            'pathname'   => $pathname,
+            'size'       => $size,
+            'mime'       => $mime,
+            'sha1'       => $sha1,
+            'md5'        => $md5,
             'suspicious' => $suspicious
         ];
 
@@ -140,9 +137,9 @@ class Upload extends Base
             $folderId = $this->user->folders()->where('name', $this->user->default_folder)->value('id');
             if (!$folderId) {
                 if (!$folderId = $this->user->folders()->insertGetId([
-                    'user_id' => $this->user->id,
+                    'user_id'   => $this->user->id,
                     'parent_id' => 0,
-                    'name' => $this->user->default_folder
+                    'name'      => $this->user->default_folder
                 ])) {
                     throw new Exception('文件夹创建失败！');
                 }
@@ -158,11 +155,11 @@ class Upload extends Base
 
         $data = [
             'name' => $image->getInfo('name'),
-            'url' => $url,
+            'url'  => $url,
             'size' => $size,
             'mime' => $mime,
             'sha1' => $sha1,
-            'md5' => $md5,
+            'md5'  => $md5,
         ];
 
         if ($this->user) {
@@ -179,8 +176,7 @@ class Upload extends Base
      * @return array|null|\think\File
      * @throws Exception
      */
-    private function getImage()
-    {
+    private function getImage() {
         $image = $this->request->file('image');
         if (null === $image) {
             throw new Exception('图片资源获取失败');
@@ -190,7 +186,7 @@ class Upload extends Base
         }
         if (!$image->check([
             'size' => $this->config['upload_max_size'],
-            'ext' => filter_comma($this->config['upload_allowed_exts']),
+            'ext'  => filter_comma($this->config['upload_allowed_exts']),
         ])) {
             throw new Exception($image->getError());
         }

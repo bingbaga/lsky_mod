@@ -3,7 +3,6 @@
 namespace app\command;
 
 //use think\Cache;
-use app\common\model\QueueLog;
 use app\Job\CompressJob;
 use app\Job\JobBase;
 use app\Job\WaterMarkJob;

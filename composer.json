@@ -26,7 +26,8 @@
         "phpmailer/phpmailer": "^6.0",
         "ext-json": "*",
         "ext-gd": "*",
-        "imagine/imagine": "~0.5.0"
+        "imagine/imagine": "~0.5.0",
+        "ext-exif": "*"
     },
     "autoload": {
         "psr-4": {

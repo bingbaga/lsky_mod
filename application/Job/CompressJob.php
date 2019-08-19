@@ -2,9 +2,9 @@
 
 namespace app\Job;
 
+use Exception;
 use app\common\model\QueueLog;
 use app\common\Service\CompressService;
-use Exception;
 use think\facade\App;
 use think\facade\Cache;
 
