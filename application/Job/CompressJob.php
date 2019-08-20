@@ -6,15 +6,12 @@ use Exception;
 use app\common\model\QueueLog;
 use app\common\Service\CompressService;
 use think\facade\App;
-use think\facade\Cache;
 
 class CompressJob extends JobBase {
     public function handle(): void {
 
         $root = App::getRootPath() . '/public/';
-        $redis = Cache::store('redis')->handler();
-        $redis->select(9);
-        $data = $redis->lpop('imgCompress');
+        $data = $this->redis->lpop('imgCompress');
         if ($data) {
             try {
                 /**

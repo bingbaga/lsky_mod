@@ -10,6 +10,7 @@ use think\console\Command;
 use think\console\Input;
 use think\console\Output;
 use Exception;
+use think\facade\Cache;
 
 class Queue extends Command {
     private function getQueueJob(): array {
@@ -35,10 +36,12 @@ class Queue extends Command {
     protected function execute(Input $input, Output $output) {
         // 指令输出
         //$output->writeln('compress');
+        $redis = Cache::store('redis')->handler();
+        $redis->select(9);
         while (true) {
             foreach ($this->getQueueJob() as $job) {
                 try {
-                    $class = new $job['class']($job['data']);
+                    $class = new $job['class']($job['data'], $redis);
                     /**
                      * @var JobBase $class
                      */

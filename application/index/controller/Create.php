@@ -17,7 +17,7 @@ class Create extends Controller {
         $root = App::getRootPath() . '/public/';
         $file = $root . $request->url();
         if (!file_exists($file)) {
-            (new ResizeImageService())->resize($file);
+            (new ResizeImageService())->resize($file, config('mod.saveThumbnail') ?? true);
         }
         $imagine = new Imagine();
         $imagine->open($file)->show($file);

@@ -10,6 +10,7 @@ use think\Response;
 class ResizeImageService {
     public function resize(string $filePath, bool $save = true): void {
         $picInfo = $this->getSourceImage($filePath);
+        $this->canResize($picInfo['with'], $picInfo['height']);
         $realFile = $picInfo['real'];
         if (!file_exists($realFile)) {
             throw new HttpResponseException(new Response('错误的请求', 404));
@@ -40,6 +41,17 @@ class ResizeImageService {
         [$height, $ext] = $extArr;
         $file = str_replace('_' . $with . '_' . $height, '', $filePath);
         return ['with' => $with, 'height' => $height, 'ext' => $ext, 'real' => $file];
+    }
 
+    private function canResize(int $width, int $height):bool {
+        $str = $width.'*'.$height;
+        $condition = config('mod.thumbnailSize');
+        if(empty($condition)){
+            throw  new HttpResponseException(new Response('错误的mod配置',400));
+        }
+        if(!in_array($str, $condition, true)){
+            throw  new HttpResponseException(new Response('非法的请求尺寸',403));
+        }
+        return true;
     }
 }

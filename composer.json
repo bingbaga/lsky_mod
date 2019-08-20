@@ -27,7 +27,8 @@
         "ext-json": "*",
         "ext-gd": "*",
         "imagine/imagine": "~0.5.0",
-        "ext-exif": "*"
+        "ext-exif": "*",
+        "ext-redis": "*"
     },
     "autoload": {
         "psr-4": {

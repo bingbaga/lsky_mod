@@ -7,19 +7,16 @@ use Exception;
 use Imagine\Gd\Imagine;
 use Imagine\Image\Point;
 use think\facade\App;
-use think\facade\Cache;
 use Imagine\Image\Color;
 
 class WaterMarkJob extends JobBase {
-    public $text = 'echo少年 echoteen.com';
+    //public $text = 'echo少年 echoteen.com';
     public const TITLE_FONT_SIZE = 50;
     public const COLOR = '#FF83FA';//十六进制颜色
 
     public function handle(): void {
         $root = App::getRootPath() . '/public/';
-        $redis = Cache::store('redis')->handler();
-        $redis->select(9);
-        $data = $redis->lpop('imgWaterMark');
+        $data = $this->redis->lpop('imgWaterMark');
         if ($data) {
             try {
                 $picInfo = json_decode($data, true);
@@ -36,12 +33,12 @@ class WaterMarkJob extends JobBase {
     private function addWaterMark(string $imgSource): void {
         $imagine = new Imagine();
         $pic = $imagine->open($imgSource);
-        $color = new Color(self::COLOR);
+        $color = new Color(config('mod.waterMarkFontColor'));
         $titleFont = $imagine->font($this->getFontPath(), self::TITLE_FONT_SIZE, $color);
-        $textBox = $titleFont->box($this->text);
+        $textBox = $titleFont->box(config('mod.waterMark'));
         $fontWith = $textBox->getWidth();
         $point = new Point($pic->getSize()->getWidth() - $fontWith - 20, $pic->getSize()->getHeight() - $textBox->getHeight() - 20);
-        $pic->draw()->text($this->text, $titleFont, $point);
+        $pic->draw()->text(config('mod.waterMark'), $titleFont, $point);
         $pic->save($imgSource);
     }
 
