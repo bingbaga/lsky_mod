@@ -6,17 +6,11 @@ namespace app\Job;
 use Redis;
 
 abstract class JobBase {
-    protected $data;
+    protected $jobData;
 
-    /**
-     * @var Redis $redis
-     */
-    protected $redis;
-
-    public function __construct(array $data, $redis) {
-        $this->data = $data;
-        $this->redis = $redis;
+    public function __construct(array $jobData) {
+        $this->jobData = $jobData;
     }
 
-    abstract public function handle(): void ;
+    abstract public function handle(): void;
 }

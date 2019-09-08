@@ -16,18 +16,15 @@ class WaterMarkJob extends JobBase {
 
     public function handle(): void {
         $root = App::getRootPath() . '/public/';
-        $data = $this->redis->lpop('imgWaterMark');
-        if ($data) {
-            try {
-                $picInfo = json_decode($data, true);
-                $this->addWaterMark($root . $picInfo['pathname']);
-                echo '水印图片-' . $picInfo['pathname'] . '完成' . PHP_EOL;
-            } catch (Exception $exception) {
-                (new QueueLog())->insert(['queue_name' => self::class, 'data' => $data, 'error_msg' => $exception->getMessage()]);
-                echo '水印脚本出现异常，异常消息为：' . $exception->getMessage() . PHP_EOL;
-            }
-
+        try {
+            $picInfo = $this->jobData;
+            $this->addWaterMark($root . $picInfo['pathname']);
+            echo '水印图片-' . $picInfo['pathname'] . '完成' . PHP_EOL;
+        } catch (Exception $exception) {
+            (new QueueLog())->insert(['queue_name' => self::class, 'data' => $this->jobData, 'error_msg' => $exception->getMessage()]);
+            echo '水印脚本出现异常，异常消息为：' . $exception->getMessage() . PHP_EOL;
         }
+
     }
 
     private function addWaterMark(string $imgSource): void {
