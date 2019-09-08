@@ -34,7 +34,8 @@ class WaterMarkJob extends JobBase {
         $titleFont = $imagine->font($this->getFontPath(), self::TITLE_FONT_SIZE, $color);
         $textBox = $titleFont->box(config('mod.waterMark'));
         $fontWith = $textBox->getWidth();
-        $point = new Point($pic->getSize()->getWidth() - $fontWith - 20, $pic->getSize()->getHeight() - $textBox->getHeight() - 20);
+        $point = new Point(abs($pic->getSize()->getWidth() - $fontWith - 20),
+            abs($pic->getSize()->getHeight() - $textBox->getHeight() - 20));
         $pic->draw()->text(config('mod.waterMark'), $titleFont, $point);
         $pic->save($imgSource);
     }

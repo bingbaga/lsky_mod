@@ -33,29 +33,33 @@ class Queue extends Command {
         $redis = Cache::store('redis')->handler();
         $redis->select(9);
         while (true) {
+            $data = $redis->blpop([BaseCache::COMPRESS, BaseCache::WATERMARK], 40);
             try {
-                $data = $redis->blpop([BaseCache::COMPRESS, BaseCache::WATERMARK], 120);
+                if (empty($data)) {
+                    continue;
+                }
                 [$key, $jobData] = $data;
                 $jobData = json_decode($jobData, true);
-                if(!empty($jobData)){
-                    switch ($key) {
-                        case BaseCache::COMPRESS:
-                            $classPath = $this->getQueueJob()[BaseCache::COMPRESS];
-                            break;
-                        case BaseCache::WATERMARK:
-                            $classPath = $this->getQueueJob()[BaseCache::WATERMARK];
-                            break;
-                        default:
-                            $classPath = ErrorJob::class;
-                    }
-                    /**
-                     * @var JobBase $class
-                     */
-                    $class = new $classPath($jobData);
-                    $class->handle();
+                if (empty($jobData)) {
+                    return;
                 }
+                switch ($key) {
+                    case BaseCache::COMPRESS:
+                        $classPath = $this->getQueueJob()[BaseCache::COMPRESS];
+                        break;
+                    case BaseCache::WATERMARK:
+                        $classPath = $this->getQueueJob()[BaseCache::WATERMARK];
+                        break;
+                    default:
+                        $classPath = ErrorJob::class;
+                }
+                /**
+                 * @var JobBase $class
+                 */
+                $class = new $classPath($jobData);
+                $class->handle();
             } catch (Exception $exception) {
-                throw $exception;
+                echo '主队列脚本异常，错误消息：' . $exception;
             }
 
         }
