@@ -1,6 +1,9 @@
 ALTER TABLE `dev`.`lsky_images`
     ADD COLUMN `compress_level` tinyint(4) UNSIGNED NOT NULL DEFAULT 0 COMMENT '压缩等级' AFTER `create_time`;
 
+ALTER TABLE `img`.`lsky_queue_logs`
+    CHANGE COLUMN `data` `job_data` text CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '数据' AFTER `queue_name`;
+
 CREATE TABLE `lsky_queue_logs`
 (
     `id`         int(10) unsigned NOT NULL AUTO_INCREMENT,

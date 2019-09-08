@@ -19,7 +19,7 @@ class CompressJob extends JobBase {
             (new CompressService($source, $percent))->compressImg($source);
             echo '压缩图片-' . $picInfo['pathname'] . '完成' . PHP_EOL;
         } catch (Exception $exception) {
-            (new QueueLog())->insert(['queue_name' => self::class, 'data' => $this->jobData, 'error_msg' => $exception->getMessage()]);
+            (new QueueLog())->insert(['queue_name' => self::class, 'job_data' => json_encode($this->jobData), 'error_msg' => $exception->getMessage()]);
             echo '压缩图片脚本出现异常，异常消息为：' . $exception->getMessage() . PHP_EOL;
         }
 
