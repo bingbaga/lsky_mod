@@ -17,7 +17,12 @@ class CompressJob extends JobBase {
                 /**
                  * @var string $data
                  */
-                $picInfo = json_decode($data, true);
+                if(is_string($data)){
+                    $picInfo = json_decode($data, true);
+                }else{
+                    $picInfo = $data;
+                }
+
                 $source = $root . $picInfo['pathname'];
                 $percent = 1;  #原图压缩，不缩放，但体积大大降低
                 //echo $root . $source;
