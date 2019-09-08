@@ -11,7 +11,7 @@ class CompressJob extends JobBase {
     public function handle(): void {
 
         $root = App::getRootPath() . '/public/';
-        $data = $this->redis->lpop('imgCompress');
+        $data = $this->redis->blpop('imgCompress', 60);
         if ($data) {
             try {
                 /**
