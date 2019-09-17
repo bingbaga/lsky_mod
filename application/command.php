@@ -10,7 +10,9 @@
 // +----------------------------------------------------------------------
 
 use app\command\Queue;
+use app\command\Sync;
 
 return [
-    'queue' => Queue::class
+    'queue' => Queue::class,
+    'sync'  => Sync::class
 ];

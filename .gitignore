@@ -9,6 +9,7 @@
 runtime
 /config/db.php
 .env
+/config/mod.php
 
 # Icon must end with two \r
 Icon
@@ -35,3 +36,4 @@ Temporary Items
 /vendor
 composer.lock
 /public/2019
+/config/mod.php

@@ -101,10 +101,10 @@ class Upload extends Base {
         if ($this->config['open_audit']) {
             $client = new Client(['timeout' => 30.00]);
             $response = $client->get("https://www.moderatecontent.com/api/v2?key={$this->config['audit_key']}&url={$url}");
-            if (200 == $response->getStatusCode()) {
-                $result = json_decode($response->getBody()->getContents());
-                if (0 == $result->error_code) {
-                    if ($result->rating_index >= $this->config['audit_index']) {
+            if (200 === (int)$response->getStatusCode()) {
+                $result = json_decode($response->getBody()->getContents(), true);
+                if (0 === $result['error_code']) {
+                    if ($result['rating_index'] >= $this->config['audit_index']) {
                         // 是否直接拦截色情图片
                         if (Config::get('site.intercept_salacity')) {
                             $strategy->delete($pathname);
@@ -223,6 +223,6 @@ class Upload extends Base {
             ), '/') . '.' . get_file_ext($name);
         }
 
-        return $path . '/' . $file;
+        return 'upload/'.$path . '/' . $file;
     }
 }
