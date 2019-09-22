@@ -32,7 +32,7 @@ class SyncService {
             return [];
         }
         foreach ($uploadKey as $upload) {
-            $uploadPath = $root . '/' . $upload;
+            $uploadPath = $root . $upload;
             $folderList = $this->folderList($uploadPath);
             foreach ($folderList as $file) {
                 if (substr_count($file, '.') > 0) {
@@ -60,7 +60,7 @@ class SyncService {
             foreach ($result['Contents'] as $rt) {
                 // 打印key
                 if (substr($rt['Key'], -1) !== '/') {
-                    $tmpPath = $root . '/' . $rt['Key'];
+                    $tmpPath = $root . $rt['Key'];
                     $ret[md5($tmpPath)] = $tmpPath;
                 }
             }
