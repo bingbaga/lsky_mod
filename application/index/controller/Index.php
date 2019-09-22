@@ -9,18 +9,20 @@
 namespace app\index\controller;
 
 use app\common\model\Images;
+use app\common\Service\OneDriveService;
 
-class Index extends Base
-{
-    public function index()
-    {
+class Index extends Base {
+    public function index() {
         $this->assign('images_count', Images::cache(120)->count());
         return $this->fetch();
     }
 
-    public function api()
-    {
+    public function api() {
         $this->assign('domain', $this->request->domain());
         return $this->fetch();
+    }
+
+    public function test() {
+        (new OneDriveService())->upload('/test/1234.txt');
     }
 }
