@@ -23,6 +23,12 @@ class Index extends Base {
     }
 
     public function test() {
-        (new OneDriveService())->upload('/test/1234.txt');
+        $str = explode('/', 'public/data/123.jpg');
+        $fileName = $str[count($str) - 1];
+        if (strpos($fileName, '_') === false) {
+            echo 1;
+            return;
+        }
+        echo 0;
     }
 }
