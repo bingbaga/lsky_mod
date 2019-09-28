@@ -34,5 +34,7 @@
         "psr-4": {
             "app\\": "application"
         }
+    },
+    "require-dev": {
     }
 }

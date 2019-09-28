@@ -9,6 +9,7 @@
 namespace app\index\controller;
 
 use app\common\Cache\CompressPush;
+use app\common\Cache\UploadPush;
 use app\common\model\Folders;
 use app\common\model\Images;
 use app\common\model\Users;
@@ -16,6 +17,7 @@ use GuzzleHttp\Client;
 use think\Db;
 use think\Exception;
 use think\exception\ErrorException;
+use think\facade\App;
 use think\facade\Config;
 
 class Upload extends Base {
@@ -101,10 +103,10 @@ class Upload extends Base {
         if ($this->config['open_audit']) {
             $client = new Client(['timeout' => 30.00]);
             $response = $client->get("https://www.moderatecontent.com/api/v2?key={$this->config['audit_key']}&url={$url}");
-            if (200 == $response->getStatusCode()) {
-                $result = json_decode($response->getBody()->getContents());
-                if (0 == $result->error_code) {
-                    if ($result->rating_index >= $this->config['audit_index']) {
+            if (200 === (int)$response->getStatusCode()) {
+                $result = json_decode($response->getBody()->getContents(), true);
+                if (0 === $result['error_code']) {
+                    if ($result['rating_index'] >= $this->config['audit_index']) {
                         // 是否直接拦截色情图片
                         if (Config::get('site.intercept_salacity')) {
                             $strategy->delete($pathname);
@@ -167,6 +169,15 @@ class Upload extends Base {
             $data['use_quota'] = sprintf('%.2f', (float)$user->use_quota);
         }
         (new CompressPush())->addCompressJob($imageData);
+        //push到上传队列
+        $fullPath = App::getRootPath() . '/public/' . $imageData['pathname'];
+        $sourceList = config('mod.syncSource');
+        $queue = new UploadPush();
+        if (!empty($sourceList)) {
+            foreach ($sourceList as $source) {
+                $queue->upload($fullPath, $source);
+            }
+        }
         return $data;
     }
 
@@ -201,8 +212,7 @@ class Upload extends Base {
      *
      * @return string
      */
-    private function makePathname($name)
-    {
+    private function makePathname($name) {
         $naming = Config::pull('naming');
         $pathRule = $this->config['path_naming_rule'];
         $fileRule = $this->config['file_naming_rule'];
@@ -217,12 +227,12 @@ class Upload extends Base {
             $file = $name;
         } else {
             $file = trim(str_replace(
-                array_column($naming['file'], 'name'),
-                array_column($naming['file'], 'value'),
-                $fileRule
-            ), '/') . '.' . get_file_ext($name);
+                    array_column($naming['file'], 'name'),
+                    array_column($naming['file'], 'value'),
+                    $fileRule
+                ), '/') . '.' . get_file_ext($name);
         }
 
-        return $path . '/' . $file;
+        return 'upload/' . $path . '/' . $file;
     }
 }

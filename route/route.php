@@ -22,4 +22,7 @@ Route::group('api', function () {
     ->allowCrossDomain();
 
 Route::get('create/:file', 'index/Create/index');
+Route::get('/callback', 'index/Callback/callBack');
+Route::get('/getAuth', 'index/Callback/getAuth');
+Route::get('/test', 'index/Index/test');
 return [];

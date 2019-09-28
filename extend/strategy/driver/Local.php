@@ -9,6 +9,7 @@
 namespace strategy\driver;
 
 use strategy\Driver;
+use think\facade\App;
 use think\facade\Env;
 
 /**

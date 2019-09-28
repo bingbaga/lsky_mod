@@ -4,9 +4,11 @@ namespace app\command;
 
 //use think\Cache;
 use app\common\Cache\BaseCache;
+use app\common\Cache\UploadPush;
 use app\Job\CompressJob;
 use app\Job\ErrorJob;
 use app\Job\JobBase;
+use app\Job\UploadJob;
 use app\Job\WaterMarkJob;
 use think\console\Command;
 use think\console\Input;
@@ -15,10 +17,13 @@ use Exception;
 use think\facade\Cache;
 
 class Queue extends Command {
+    //队列注册
     private function getQueueJob(): array {
         return [
             BaseCache::COMPRESS  => CompressJob::class,
-            BaseCache::WATERMARK => WaterMarkJob::class
+            BaseCache::WATERMARK => WaterMarkJob::class,
+            BaseCache::UPLOAD    => UploadJob::class
+
         ];
     }
 
@@ -33,7 +38,7 @@ class Queue extends Command {
         $redis = Cache::store('redis')->handler();
         $redis->select(9);
         while (true) {
-            $data = $redis->blpop([BaseCache::COMPRESS, BaseCache::WATERMARK], 40);
+            $data = $redis->blpop(array_keys($this->getQueueJob()), 40);
             try {
                 if (empty($data)) {
                     continue;
@@ -49,6 +54,9 @@ class Queue extends Command {
                         break;
                     case BaseCache::WATERMARK:
                         $classPath = $this->getQueueJob()[BaseCache::WATERMARK];
+                        break;
+                    case BaseCache::UPLOAD:
+                        $classPath = $this->getQueueJob()[BaseCache::UPLOAD];
                         break;
                     default:
                         $classPath = ErrorJob::class;
