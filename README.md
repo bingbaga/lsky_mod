@@ -1,25 +1,13 @@
-<p align="center">
-    <a href="./public/static/app/images/logo.png" target="_blank">
-        <img width="300" src="./public/static/app/images/logo.png">
-    </a>
-</p>
+魔改功能
+---
 
-# Lsky Pro - Your photo album on the cloud.
+- 大都功能队列化，减少请求时间
+- 自动水印
+- 自动缩略图，静态化，缓存本地，资源可以被CDN cache到，不带参数
+- 本地存储支持分布式备份
 
-[官网](https://www.lsky.pro) &nbsp;
-[手册](https://www.kancloud.cn/wispx/lsky-pro) &nbsp;
-[演示](https://pic.iqy.ink) &nbsp;
-[Chrome 拓展](https://github.com/wisp-x/lsky-pro-chrome-extension)
-[Telegram 群组](https://t.me/lsky_pro)
-
-[![License](https://img.shields.io/badge/license-GPL_V3.0-yellowgreen.svg)](https://github.com/wisp-x/lsky-pro/blob/master/LICENSE)
-[![PHP](https://img.shields.io/badge/PHP->=5.6-orange.svg)](http://php.net)
-[![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/wisp-x/lsky-pro.svg)](https://github.com/wisp-x/lsky-pro)
-
-> 下载稳定版请点击[这里](https://github.com/wisp-x/lsky-pro/releases)，发现 bug 可发送邮件至邮箱：i@wispx.cn，或提交 [issues](https://github.com/wisp-x/lsky-pro/issues)，确认 bug 后我会及时修复，谢谢！
-
-![homepage.png](./public/static/app/images/demo/1.png)
-![homepage.png](./public/static/app/images/demo/2.png)
+  同时针对腾讯云COS和微软oneDrive增量备份，后续增加Google等
+- 支持定时检测配置的备份数据是否遗漏，则推给队列
 
 主要特性
 ---
@@ -36,12 +24,13 @@
 
 安装需求
 ---
-* PHP 版本 &ge; 5.6(建议使用PHP7+)
+* PHP 必须php7.1+
 * mysql 版本 &ge; 5.5
 * mysqli 支持
 * fileinfo 拓展
 * curl 拓展
 * rewrite
+* 严重依赖redis,不适请离开
 
 安装教程
 ---
