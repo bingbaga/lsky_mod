@@ -9,6 +9,11 @@
   同时针对腾讯云COS和微软oneDrive增量备份，后续增加Google等
 - 支持定时检测配置的备份数据是否遗漏，则推给队列
 
+教程
+---
+1. 博客地址：https://www.echoteen.com/lsky-mode-release-intro.html
+2. 如有疑问可以直接博客评论或者issue提出
+
 主要特性
 ---
 - 支持第三方云储存，支持本地、阿里云 OSS、腾讯云 COS、七牛云、又拍云。
@@ -54,46 +59,7 @@
 
 如何更新到最新版？
 ---
-升级过程并不复杂，但也简单粗暴，总共分为四个步骤。
-1. [下载](https://github.com/wisp-x/lsky-pro/releases)最新版程序并解压到本地。
-2. 将旧版程序 ```config/db.php``` 文件复制到新版程序的 ```config``` 文件夹，如果你使用的是本地储存策略，文件是储存在本地的，请注意也要将你旧版本的图片资源移动到新程序对应的目录。
-3. 删除旧版本程序所有文件，上传最新版程序到站点根目录即可(这一步也可以直接覆盖，但会有残留文件，不选择覆盖的话建议先打包备份旧版本)。
-4. 使用管理员账号登录，访问任意页面会跳转到升级数据库结构页面，根据提示操作即可。
-
-FAQ：如果覆盖更新文件后无法重定向到更新页面，或首页出现错误，请直接访问  ```http://域名/install/update.html``` 进行更新。
-
-如何修改网站运行目录？
----
-默认程序的入口文件在 ```public``` 目录下，所以需要把 public 目录设置为网站运行目录，这样做是为了：
-> 入口文件位置的设计是为了让应用部署更安全，```public``` 目录为web可访问目录，其他的文件都可以放到非WEB访问目录下面。
-
-而你如果安装时没有设置，使用 ```http://域名/public``` 的方式来访问站点，会导致 css 和 js 等静态资源无法获取。  
-如果你 无法 或 不会 设置运行目录，可以将 public 目录下的所有文件和文件夹（包括 .htaccess 文件）移动到根目录
-(和 ```application``` 文件夹同级)即可，尽管我们不推荐你这么做，这样会导致应用程序核心文件暴露在外。
-
-移动文件以后，打开根目录 ```index.php``` 文件，修改如下：
-```php
-<?php
-
-// [ 应用入口文件 ]
-namespace think;
-
-define('ROOT_PATH', __DIR__ . DIRECTORY_SEPARATOR);
-
-// 加载基础文件
-require __DIR__ . '/thinkphp/base.php';
-
- // 执行应用并响应
-Container::get('app')->bind('index')->run()->send();
- ```
-
-注意：请不要使用记事本打开修改，修改完成后保存即可。
-
-联系我
----
-- QQ：1591788658
-- Email: i@wispx.cn
-- Blog：[https://www.wispx.cn](https://www.wispx.cn)
+- 直接在软件目录执行git pull即可更新到最新版
 
 鸣谢
 ---
@@ -107,5 +73,8 @@ Container::get('app')->bind('index')->run()->send();
 开源许可
 ---
 [GPL 3.0](https://opensource.org/licenses/GPL-3.0)
+
+原作者开源地址
+- https://github.com/wisp-x/lsky-pro
 
 Copyright (c) 2018-present Lsky Pro.
