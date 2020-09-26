@@ -5,6 +5,8 @@
 .idea
 .vscode
 *.lock
+thinkphp/
+vendor/
 
 runtime
 /config/db.php
