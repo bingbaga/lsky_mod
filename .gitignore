@@ -38,3 +38,5 @@ Temporary Items
 /vendor
 composer.lock
 /public/2019
+/public/upload/
+/thinkphp/
