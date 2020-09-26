@@ -38,8 +38,8 @@ trait Jump
      */
     protected function success($msg = '', $url = null, $data = '', $wait = 3, array $header = [])
     {
-        if ($url === null && isset($_SERVER['HTTP_REFERER'])) {
-            $url = $_SERVER['HTTP_REFERER'];
+        if (is_null($url) && isset($_SERVER["HTTP_REFERER"])) {
+            $url = $_SERVER["HTTP_REFERER"];
         } elseif ('' !== $url) {
             $url = (strpos($url, '://') || 0 === strpos($url, '/')) ? $url : Container::get('url')->build($url);
         }
@@ -54,7 +54,7 @@ trait Jump
 
         $type = $this->getResponseType();
         // 把跳转模板的渲染下沉，这样在 response_send 行为里通过getData()获得的数据是一致性的格式
-        if ('html' === strtolower($type)) {
+        if ('html' == strtolower($type)) {
             $type = 'jump';
         }
 
@@ -73,9 +73,10 @@ trait Jump
      * @param  array     $header 发送的Header信息
      * @return void
      */
-    protected function error($msg = '', $url = null, $data = '', $wait = 3, array $header = []): void {
+    protected function error($msg = '', $url = null, $data = '', $wait = 3, array $header = [])
+    {
         $type = $this->getResponseType();
-        if ($url === null) {
+        if (is_null($url)) {
             $url = $this->app['request']->isAjax() ? '' : 'javascript:history.back(-1);';
         } elseif ('' !== $url) {
             $url = (strpos($url, '://') || 0 === strpos($url, '/')) ? $url : $this->app['url']->build($url);
@@ -89,7 +90,7 @@ trait Jump
             'wait' => $wait,
         ];
 
-        if ('html' === strtolower($type)) {
+        if ('html' == strtolower($type)) {
             $type = 'jump';
         }
 
@@ -108,7 +109,8 @@ trait Jump
      * @param  array     $header 发送的Header信息
      * @return void
      */
-    protected function result($data, $code = 0, $msg = '', $type = '', array $header = []): void {
+    protected function result($data, $code = 0, $msg = '', $type = '', array $header = [])
+    {
         $result = [
             'code' => $code,
             'msg'  => $msg,
@@ -131,10 +133,11 @@ trait Jump
      * @param  array          $with 隐式传参
      * @return void
      */
-    protected function redirect($url, $params = [], $code = 302, $with = []): void {
+    protected function redirect($url, $params = [], $code = 302, $with = [])
+    {
         $response = new Redirect($url);
 
-        if (is_int($params)) {
+        if (is_integer($params)) {
             $code   = $params;
             $params = [];
         }
@@ -149,7 +152,8 @@ trait Jump
      * @access protected
      * @return string
      */
-    protected function getResponseType(): string {
+    protected function getResponseType()
+    {
         if (!$this->app) {
             $this->app = Container::get('app');
         }
